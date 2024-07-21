@@ -11,7 +11,7 @@ Instagram Post: Announcing the launch of the gamification feature with key eleme
 ## Screenshots
 
 ### Primary Screen
-![Primary Screen](images/mainpage.png)
+![Primary Screen](mainpage.png)
 
 ### Additional Screen
 ![Additional Screen](images/order.png)
