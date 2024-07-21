@@ -14,15 +14,15 @@ Instagram Post: Announcing the launch of the gamification feature with key eleme
 ![Primary Screen](mainpage.png)
 
 ### Additional Screen
-![Additional Screen](images/order.png)
+![Additional Screen](order.png)
 
-![Additional Screen](images/rate.png)
+![Additional Screen](rate.png)
 
 ### Logo
-![Logo](images/logo.png)
+![Logo](logo.png)
 
 ### Instagram Post
-![Instagram Post](images/insta.png)
+![Instagram Post](insta.png)
 
 ## Getting Started
 1. Clone the repository:
