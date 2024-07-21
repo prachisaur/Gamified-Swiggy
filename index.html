@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swiggy Gamification</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <!-- <script src="scripts.js" defer></script> -->
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+header {
+    background-color: #ff5722;
+    color: #fff;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideIn 0.5s ease-out;
+}
+
+.logo {
+    height: 40px;
+    margin-left: 15px;
+}
+
+nav {
+    margin-right: 10px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    animation: bounceIn 1s ease-in-out;
+    animation-delay: calc(0.1s * var(--i));
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+nav ul li:nth-child(1) { --i: 1; }
+nav ul li:nth-child(2) { --i: 2; }
+nav ul li:nth-child(3) { --i: 3; }
+nav ul li:nth-child(4) { --i: 4; }
+nav ul li:nth-child(5) { --i: 5; }
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    opacity: 1;
+}
+
+nav a:hover {
+    background-color: #fff;
+    color: #ff5722;
+    transform: scale(1.1);
+}
+
+main {
+    padding: 2rem;
+}
+
+section {
+    margin-bottom: 2rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #ff5722;
+    margin-bottom: 1rem;
+}
+
+.daily-challenges ul, .leaderboard ol, .rewards ul, .rewards-dashboard ul, .order-page ul {
+    list-style: none;
+    padding: 0;
+}
+
+.daily-challenges li, .leaderboard li, .rewards li, .rewards-dashboard li, .order-page li {
+    background: #f9f9f9;
+    margin: 0.5rem 0;
+    padding: 1rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+}
+
+.daily-challenges li:hover, .leaderboard li:hover, .rewards li:hover, .rewards-dashboard li:hover, .order-page li:hover {
+    background: #ff5722;
+    color: #fff;
+}
+
+.points, .score, .cost, .status {
+    font-weight: bold;
+}
+
+.status {
+    color: #ff5722;
+}
+
+.points-total {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #ff5722;
+}
+
+.order-page button {
+    padding: 0.5rem 1rem;
+    background-color: #ff5722;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.order-page button:hover {
+    background-color: #fff;
+    color: #ff5722;
+}
+
+.profile {
+    text-align: center;
+}
+
+.profile img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 1rem;
+}
+
+.profile h2 {
+    margin-bottom: 0.5rem;
+}
+
+.profile p {
+    margin: 0.5rem 0;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+    </style>
+</head>
+<body>
+    <script>
+        // Constants
+const CHALLENGE_RESET_TIME = 2 * 60 * 1000; // 5 minutes in milliseconds
+
+// Load stored data or initialize default values
+let points = parseInt(localStorage.getItem('points')) || 0;
+let orderCount = parseInt(localStorage.getItem('orderCount')) || 0;
+let referralStatus = localStorage.getItem('referralStatus') === 'true';
+let ratedDishesCount = parseInt(localStorage.getItem('ratedDishesCount')) || 0;
+let rateChallengeBlocked = localStorage.getItem('rateChallengeBlocked') === 'true';
+let lastOrderTime = parseInt(localStorage.getItem('lastOrderTime')) || 0;
+let lastReferralTime = parseInt(localStorage.getItem('lastReferralTime')) || 0;
+let lastRateTime = parseInt(localStorage.getItem('lastRateTime')) || 0;
+
+// Function to load the home screen content
+function loadHome() {
+    document.getElementById('content').innerHTML = `
+        <section class="daily-challenges">
+            <h2>Challenges</h2>
+            <ul>
+                <li onclick="${orderCount >= 3 ? '' : 'redirectOrder()'}" style="color: ${orderCount >= 3 ? 'grey' : 'inherit'};">
+                    Order minimum 3 dishes at once
+                    <span class="points">+50 points</span> 
+                </li>
+                <li onclick="${referralStatus ? '' : 'redirectRefer()'}" style="color: ${referralStatus ? 'grey' : 'inherit'};">
+                    Refer a friend <span class="points">+30 points</span> 
+                </li>
+                <li onclick="${rateChallengeBlocked ? '' : 'redirectRate()'}" style="color: ${rateChallengeBlocked ? 'grey' : 'inherit'};">
+                    Rate atleast 5 dishes <span class="points">+20 points</span> 
+                </li>
+            </ul>
+        </section>
+        <section class="leaderboard">
+            <h2>Leaderboard</h2>
+            <ol>
+                <li>User1 <span class="score">1500</span></li>
+                <li>User2 <span class="score">1200</span></li>
+                <li>User3 <span class="score">1100</span></li>
+            </ol>
+        </section>
+        <section class="rewards">
+            <h2>Available Rewards</h2>
+            <ul>
+                <li>Free Delivery Coupon <span class="cost">100 points</span></li>
+                <li>10% Off Next Order <span class="cost">200 points</span></li>
+                <li>Exclusive Badge <span class="cost">300 points</span></li>
+            </ul>
+        </section>
+    `;
+    updateProgress();
+}
+
+// Function to redirect to the order page
+function redirectOrder() {
+    window.location.href = 'order.html';
+}
+
+// Function to redirect to the refer page
+function redirectRefer() {
+    window.location.href = 'refer.html';
+}
+
+// Function to redirect to the rate dishes page
+function redirectRate() {
+    window.location.href = 'rate.html';
+}
+
+// Function to update progress
+function updateProgress() {
+    document.getElementById('progress').textContent = `${orderCount}/1`;
+    document.getElementById('refer-progress').textContent = referralStatus ? '1/1' : '0/1';
+    document.getElementById('rate-progress').textContent = `${ratedDishesCount}/5`;
+    updateRewards(); // Update rewards based on current points
+}
+
+// Function to update rewards based on points
+function updateRewards() {
+    const rewardsSection = document.querySelector('.rewards');
+    if (rewardsSection) {
+        rewardsSection.innerHTML = `
+            <h2>Available Rewards</h2>
+            <ul>
+                <li>Free Delivery Coupon <span class="status">${points >= 100 ? 'Unlocked' : 'Locked'}</span></li>
+                <li>10% Off Next Order <span class="status">${points >= 200 ? 'Unlocked' : 'Locked'}</span></li>
+                <li>Exclusive Badge <span class="status">${points >= 300 ? 'Unlocked' : 'Locked'}</span></li>
+            </ul>
+            <h2>Your Points</h2>
+            <p>You have <span class="points-total">${points}</span> points</p>
+        `;
+    }
+}
+
+// Function to handle rating dishes
+function rateDishes() {
+    if (rateChallengeBlocked) {
+        alert('You have already completed the rating challenge!');
+        return;
+    }
+
+    // Simulate rating a dish
+    ratedDishesCount++;
+    localStorage.setItem('ratedDishesCount', ratedDishesCount);
+
+    if (ratedDishesCount >= 5) {
+        rateChallengeBlocked = true;
+        localStorage.setItem('rateChallengeBlocked', 'true');
+        points += 20; // Add points for completing the challenge
+        localStorage.setItem('points', points);
+        alert('Congratulations! You have completed the rating challenge.');
+    }
+    
+    updateProgress();
+}
+
+// Function to load the rewards screen content
+function loadRewards() {
+    document.getElementById('content').innerHTML = `
+        <section class="rewards-dashboard">
+            <h2>Your Rewards</h2>
+            <ul>
+                <li>Free Delivery Coupon <span class="status">${points >= 100 ? 'Unlocked' : 'Locked'}</span></li>
+                <li>10% Off Next Order <span class="status">${points >= 200 ? 'Unlocked' : 'Locked'}</span></li>
+                <li>Exclusive Badge <span class="status">${points >= 300 ? 'Unlocked' : 'Locked'}</span></li>
+            </ul>
+            <h2>Your Points</h2>
+            <p>You have <span class="points-total">${points}</span> points</p>
+        </section>
+    `;
+}
+
+// Function to load the profile screen content
+// Function to load the profile screen content
+function loadProfile() {
+    document.getElementById('content').innerHTML = `
+        <section class="profile">
+            <img src="pic.jpg" alt="Profile Picture">
+            <h2>User Profile</h2>
+            <p><strong>Name:</strong> Prachi Saurabh</p>
+            <p><strong>Email:</strong> prachisaur@gmail.com</p>
+            <p><strong>Joined:</strong> January 2021</p>
+            <p><strong>Total Points:</strong> ${points}</p>
+            <p><strong>Badges:</strong> 3</p>
+        </section>
+    `;
+}
+
+
+// Function to load the challenges screen content
+function loadChallenges() {
+    document.getElementById('content').innerHTML = `
+        <section class="daily-challenges">
+            <h2>Daily Challenges</h2>
+            <ul>
+                <li onclick="${orderCount >= 3 ? '' : 'redirectOrder()'}" style="color: ${orderCount >= 3 ? 'grey' : 'inherit'};">
+                    Order 3 different cuisines 
+                    <span class="points">+50 points</span> 
+                </li>
+                <li onclick="${referralStatus ? '' : 'redirectRefer()'}" style="color: ${referralStatus ? 'grey' : 'inherit'};">
+                    Refer a friend <span class="points">+30 points</span> 
+                </li>
+                <li onclick="${rateChallengeBlocked ? '' : 'redirectRate()'}" style="color: ${rateChallengeBlocked ? 'grey' : 'inherit'};">
+                    Rate 5 dishes <span class="points">+20 points</span> 
+                </li>
+            </ul>
+        </section>
+    `;
+    updateProgress();
+}
+
+// Function to load the leaderboard screen content
+function loadLeaderboard() {
+    document.getElementById('content').innerHTML = `
+        <section class="leaderboard">
+            <h2>Leaderboard</h2>
+            <ol>
+                <li>User1 <span class="score">1500</span></li>
+                <li>User2 <span class="score">1200</span></li>
+                <li>User3 <span class="score">1100</span></li>
+            </ol>
+        </section>
+    `;
+}
+
+// Initialize page content
+document.addEventListener('DOMContentLoaded', function() {
+    loadHome();
+});
+
+    </script>
+    <header>
+        <img src="logo.png" alt="Logo" class="logo">
+        <nav>
+            <ul>
+                <li><a href="#" onclick="loadHome()">Home</a></li>
+                <li><a href="#" onclick="loadChallenges()">Challenges</a></li>
+                <li><a href="#" onclick="loadLeaderboard()">Leaderboard</a></li>
+                <li><a href="#" onclick="loadRewards()">Rewards</a></li>
+                <li><a href="#" onclick="loadProfile()">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main id="content">
+        <!-- Content will be dynamically loaded here -->
+    </main>
+</body>
+</html>

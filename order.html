@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Dishes</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.dish-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.dish-card img {
+    width: 100%; /* Ensure the image spans the width of the container */
+    height: 200px; /* Set a common height */
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+    border-radius: 10px;
+}
+
+.dish-card h3 {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+.dish-card p {
+    font-size: 16px;
+    color: #555;
+}
+
+.dish-card button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dish-card button:hover {
+    background-color: #45a049;
+}
+
+.checkout {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.checkout button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.checkout button:hover {
+    background-color: #0b7dda;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Order Dishes</h1>
+        <div class="grid">
+            <!-- Repeat this dish-card block for each dish -->
+            <div class="dish-card">
+                <img src="dish1.jpg" alt="Dish 1">
+                <h3>Biryani</h3>
+                <p>Rate: $10</p>
+                <button onclick="addToCart('Biryani', 10)">Add to Cart</button>
+            </div>
+            <div class="dish-card">
+                <img src="dish2.jpg" alt="Dish 2" >
+                <h3>Butter Chicken</h3>
+                <p>Rate: $12</p>
+                <button onclick="addToCart('Butter Chicken', 12)">Add to Cart</button>
+            </div>
+            <div class="dish-card">
+                <img src="dish3.jpg" alt="Dish 3" >
+                <h3>Dal Makhani</h3>
+                <p>Rate: $8</p>
+                <button onclick="addToCart('Dal Makhani', 8)">Add to Cart</button>
+            </div>
+            <div class="dish-card">
+                <img src="dish4.jpg" alt="Dish 4">
+                <h3>Butter Naan</h3>
+                <p>Rate: $15</p>
+                <button onclick="addToCart('Butter Naan', 15)">Add to Cart</button>
+            </div>
+            <div class="dish-card">
+                <img src="dish5.jpeg" alt="Dish 5">
+                <h3>Tandoori Roti</h3>
+                <p>Rate: $9</p>
+                <button onclick="addToCart('Tandoori Roti', 9)">Add to Cart</button>
+            </div>
+            <div class="dish-card">
+                <img src="dish6.jpg" alt="Dish 6">
+                <h3>Pizza</h3>
+                <p>Rate: $11</p>
+                <button onclick="addToCart('Pizza', 11)">Add to Cart</button>
+            </div>
+            <div class="dish-card">
+                <img src="dish7.jpeg" alt="Dish 7">
+                <h3>Pasta (Alfredo/Arrabiata/Aglio e Olio)</h3>
+                <p>Rate: $14</p>
+                <button onclick="addToCart('Pasta', 14)">Add to Cart</button>
+            </div>
+            <div class="dish-card">
+                <img src="dish8.jpeg" alt="Dish 8">
+                <h3>Hakkah Noodles</h3>
+                <p>Rate: $7</p>
+                <button onclick="addToCart('Hakkah Noodles', 7)">Add to Cart</button>
+            </div>
+            <div class="dish-card">
+                <img src="dish9.jpg" alt="Dish 9">
+                <h3>Crispy Chilli Baby Corn</h3>
+                <p>Rate: $13</p>
+                <button onclick="addToCart('Crispy Chilli Baby Corn', 13)">Add to Cart</button>
+            </div>
+        </div>
+        <div class="checkout">
+            <button onclick="placeOrder()">Place Order</button>
+        </div>
+    </div>
+    <script>
+        let cart = [];
+
+        function addToCart(dishName, dishPrice) {
+            cart.push({ name: dishName, price: dishPrice });
+            alert(`${dishName} added to cart!`);
+        }
+
+        function placeOrder() {
+            if (cart.length < 3) {
+                alert("You need to add at least 3 dishes to the cart!");
+                return;
+            }
+
+            // Update points in local storage
+            let points = parseInt(localStorage.getItem('points')) || 0;
+            points += 50; // Assuming 100 points for placing an order
+            localStorage.setItem('points', points);
+
+            // Redirect to the index page
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

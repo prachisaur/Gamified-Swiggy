@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refer a Friend</title>
+    <link rel="stylesheet" href="refer.css">
+    <script src="refer.js" defer></script>
+</head>
+<body>
+    <header>
+        <header>
+            <div class="container">
+                <img src="logo.png" alt="Logo" class="logo">
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="order.html">Order</a></li>
+                        <li><a href="rate.html">Rate</a></li>
+                        <li><a href="refer.html">Refer</a></li>
+                        <li><a href="rewards.html">Rewards</a></li>
+                        <li><a href="profile.html">Profile</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+    </header>
+    <main id="content">
+        <section class="refer-section">
+            <h1>Refer a Friend</h1>
+            <div class="container">
+                <label for="referral-link">Your Referral Link:</label>
+                <div class="link-container">
+                    <input type="text" id="referral-link" value="https://www.example.com/referral?code=123456" readonly>
+                    <button onclick="copyLink()">Copy Link</button>
+                </div>
+                <div class="share-buttons">
+                    <button class="share-icon" style="background-color: #3b5998;" onclick="share('facebook')">F</button>
+                    <button class="share-icon" style="background-color: #25d366;" onclick="share('whatsapp')">W</button>
+                    <button class="share-icon" style="background-color: #e4405f;" onclick="share('instagram')">I</button>
+                    <button class="share-icon" style="background-color: #0077b5;" onclick="share('linkedin')">L</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Swiggy</p>
+    </footer>
+</body>
+</html>
